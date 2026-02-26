@@ -1,19 +1,19 @@
-// Scoring Logic for Baking Personality Quiz
+// Scoring Logic for Dipti Baking Skill Alignment Quiz
 // Implements all scoring rules as specified in the framework
 
 const ScoringEngine = {
-    // Likert mapping: 1→0, 2→25, 3→50, 4→75, 5→100
+    // Likert mapping: 1→20, 2→40, 3→60, 4→80, 5→100
     likertMap: {
-        1: 0,
-        2: 25,
-        3: 50,
-        4: 75,
+        1: 20,
+        2: 40,
+        3: 60,
+        4: 80,
         5: 100
     },
 
-    // Reverse score: 100 - mapped value
+    // Reverse score: 120 - raw score
     reverseScore(score) {
-        return 100 - score;
+        return 120 - score;
     },
 
     // Map Likert value to score
@@ -29,16 +29,13 @@ const ScoringEngine = {
 
         if (question.type === 'likert') {
             const rawScore = this.mapLikert(parseInt(answer));
-            if (question.reverse) {
+            if (question.negative) {
                 score = this.reverseScore(rawScore);
             } else {
                 score = rawScore;
             }
-        } else if (question.type === 'categorical') {
-            const option = question.options.find(opt => opt.value === answer);
-            score = option ? option.score : 0;
         } else {
-            // Non-scored questions (text, single without score)
+            // Non-scored questions (single choice in Section 8)
             return null;
         }
 
@@ -69,155 +66,161 @@ const ScoringEngine = {
         return scores.reduce((sum, s) => sum + s, 0) / scores.length;
     },
 
-    // Calculate all dimension scores
+    // Calculate all 7 dimension scores
     calculateAllDimensions(answers) {
         const dimensions = {};
 
-        // Section 1: Baking Personality (BP)
-        dimensions.BP = this.calculateDimensionScore('section1', answers) || 0;
-
-        // Section 3: Baking Skills (BS)
-        dimensions.BS = this.calculateDimensionScore('section3', answers) || 0;
-
-        // Section 5: Business & Creativity (BC)
-        dimensions.BC = this.calculateDimensionScore('section5', answers) || 0;
+        dimensions.BFS = this.calculateDimensionScore('section1', answers) || 0;
+        dimensions.REX = this.calculateDimensionScore('section2', answers) || 0;
+        dimensions.FDS = this.calculateDimensionScore('section3', answers) || 0;
+        dimensions.ATS = this.calculateDimensionScore('section4', answers) || 0;
+        dimensions.BPS = this.calculateDimensionScore('section5', answers) || 0;
+        dimensions.WSS = this.calculateDimensionScore('section6', answers) || 0;
+        dimensions.LCL = this.calculateDimensionScore('section7', answers) || 0;
 
         return dimensions;
     },
 
-    // Calculate Composite Indices
+    // Calculate Composite Indices (LCI)
     calculateCompositeIndices(dimensions) {
         const indices = {};
 
-        // CSI (Creative Style Index) = 0.50*BP + 0.50*BC
-        indices.CSI = (0.50 * dimensions.BP) + (0.50 * dimensions.BC);
-
-        // BRI (Baking Readiness Index) = 0.40*BS + 0.30*BP + 0.30*BC
-        indices.BRI = (0.40 * dimensions.BS) + (0.30 * dimensions.BP) + (0.30 * dimensions.BC);
-
-        // BPI (Business Potential Index) = 0.50*BC + 0.30*BS + 0.20*BP
-        indices.BPI = (0.50 * dimensions.BC) + (0.30 * dimensions.BS) + (0.20 * dimensions.BP);
+        // Learning Clarity Index (LCI) = Avg(LCL, WSS)
+        indices.LCI = (dimensions.LCL + dimensions.WSS) / 2;
 
         return indices;
     },
 
-    // Calculate Final Baking Score
-    calculateFinalScore(indices) {
-        // Final Score = (CSI + BRI + BPI) / 3
-        const finalScore = (indices.CSI + indices.BRI + indices.BPI) / 3;
+    // Evaluate Gaps and Strength
+    calculateGapsAndStrength(dimensions) {
+        // Exclude LCL from being a primary gap or strength as it's a meta-skill
+        const coreDims = {
+            BFS: dimensions.BFS,
+            REX: dimensions.REX,
+            FDS: dimensions.FDS,
+            ATS: dimensions.ATS,
+            BPS: dimensions.BPS,
+            WSS: dimensions.WSS
+        };
+
+        // Convert to array and sort low to high
+        const sorted = Object.entries(coreDims)
+            .sort((a, b) => a[1] - b[1]);
+
+        return {
+            primaryGap: { key: sorted[0][0], score: sorted[0][1] },
+            secondaryGap: { key: sorted[1][0], score: sorted[1][1] },
+            strengthLever: { key: sorted[sorted.length - 1][0], score: sorted[sorted.length - 1][1] }
+        };
+    },
+
+    // Calculate Final Overall Average Score
+    calculateFinalScore(dimensions) {
+        const values = Object.values(dimensions);
+        const finalScore = values.reduce((sum, val) => sum + val, 0) / values.length;
         return Math.round(finalScore);
     },
 
     // Determine Archetype based on Final Score
     determineArchetype(score) {
-        if (score <= 40) {
-            return archetypes.noviceBaker;
-        } else if (score <= 60) {
-            return archetypes.homeBaker;
-        } else if (score <= 80) {
-            return archetypes.artisanBaker;
+        if (score <= 39) {
+            return archetypes.needsStrengthening;
+        } else if (score <= 59) {
+            return archetypes.developing;
+        } else if (score <= 79) {
+            return archetypes.strong;
         } else {
-            return archetypes.masterBaker;
+            return archetypes.advanced;
         }
     },
 
-    // Generate Key Insights based on scores
-    generateInsights(dimensions, indices, archetype) {
-        const insights = [];
-
-        // Insight 1: Based on archetype
-        insights.push({
-            icon: archetype.icon,
-            text: `As someone in <strong>${archetype.name}</strong>, ${this.getArchetypeInsight(archetype)}`
-        });
-
-        // Insight 2: Strongest dimension
-        const dimensionAreas = {
-            BP: dimensions.BP,
-            BS: dimensions.BS,
-            BC: dimensions.BC
-        };
-        const strongest = Object.entries(dimensionAreas)
-            .sort((a, b) => b[1] - a[1])[0];
-
-        insights.push({
-            icon: dimensionInfo[strongest[0]].icon,
-            text: `Your strongest area is <strong>${dimensionInfo[strongest[0]].name}</strong> (${Math.round(strongest[1])}%). This is where your baking passion truly shines.`
-        });
-
-        // Insight 3: Area with most growth potential
-        const weakest = Object.entries(dimensionAreas)
-            .sort((a, b) => a[1] - b[1])[0];
-
-        if (weakest[1] < 60) {
-            insights.push({
-                icon: '🌱',
-                text: `Your greatest growth opportunity is in <strong>${dimensionInfo[weakest[0]].name}</strong> (${Math.round(weakest[1])}%). Focused practice here will elevate your entire baking game.`
-            });
-        }
-
-        // Insight 4: Creative Style
-        if (indices.CSI >= 60) {
-            insights.push({
-                icon: '🎨',
-                text: `Your <strong>Creative Style Index</strong> (${Math.round(indices.CSI)}%) shows a wonderful creative spark. You have a natural eye for innovation in the kitchen.`
-            });
-        } else {
-            insights.push({
-                icon: '🎨',
-                text: `Your <strong>Creative Style Index</strong> (${Math.round(indices.CSI)}%) suggests room to explore your creative side. Try experimenting with new flavors and decorating styles.`
-            });
-        }
-
-        // Insight 5: Business Potential
-        if (indices.BPI >= 60) {
-            insights.push({
-                icon: '💼',
-                text: `Your <strong>Business Potential</strong> (${Math.round(indices.BPI)}%) indicates real entrepreneurial promise. You have the mindset to turn your baking passion into a thriving business!`
-            });
-        }
-
-        return insights;
+    // Generate Roadmap Phase Mapping
+    generateRoadmap(gaps) {
+        return [
+            {
+                phase: 'Stability Phase',
+                duration: 'First 30–40% of timeline',
+                focusKey: gaps.primaryGap.key,
+                focusName: dimensionInfo[gaps.primaryGap.key].name,
+                focusScore: gaps.primaryGap.score,
+                courses: dimensionInfo[gaps.primaryGap.key].courses,
+                description: `Address your primary gap in ${dimensionInfo[gaps.primaryGap.key].name} to build a stable foundation.`
+            },
+            {
+                phase: 'Expansion Phase',
+                duration: 'Next 30–40% of timeline',
+                focusKey: gaps.secondaryGap.key,
+                focusName: dimensionInfo[gaps.secondaryGap.key].name,
+                focusScore: gaps.secondaryGap.score,
+                courses: dimensionInfo[gaps.secondaryGap.key].courses,
+                description: `Expand your capabilities by tackling your secondary gap in ${dimensionInfo[gaps.secondaryGap.key].name}.`
+            },
+            {
+                phase: 'Leverage Phase',
+                duration: 'Final 20–30% of timeline',
+                focusKey: gaps.strengthLever.key,
+                focusName: dimensionInfo[gaps.strengthLever.key].name,
+                focusScore: gaps.strengthLever.score,
+                courses: dimensionInfo[gaps.strengthLever.key].courses,
+                description: `Multiply your success by leaning heavily into your strongest asset: ${dimensionInfo[gaps.strengthLever.key].name}.`
+            }
+        ];
     },
 
-    getArchetypeInsight(archetype) {
-        switch (archetype.name) {
-            case 'The Novice Baker':
-                return 'your baking journey is just beginning. Every great baker started with curiosity and a willingness to learn — and you have both in abundance.';
-            case 'The Home Baker':
-                return 'you\'ve built a solid baking foundation. With focused practice and exploration, you\'re ready to take your skills to exciting new heights.';
-            case 'The Artisan Baker':
-                return 'your skills and creativity are impressive. A few advanced techniques and business strategies can help you fully realize your baking potential.';
-            case 'The Master Baker':
-                return 'you\'ve achieved remarkable mastery. Your focus now is on innovation, mentorship, and sharing your exceptional craft with the world.';
-            default:
-                return 'your baking profile is unique and full of delicious potential.';
-        }
+    // Calculate recommended timeline based on time commitment vs goals
+    calculateTimeline(timeCommitment, lci) {
+        let baseMonths = 6;
+
+        // Adjust based on time
+        if (timeCommitment === 'less-than-2') baseMonths += 3;
+        if (timeCommitment === '6-plus') baseMonths -= 2;
+
+        // Adjust based on Learning Clarity Index
+        if (lci < 50) baseMonths += 2; // Needs more time to focus
+        if (lci >= 80) baseMonths -= 1; // High clarity speeds execution
+
+        return Math.max(3, Math.min(12, Math.round(baseMonths))); // Clamp between 3-12 months
     },
 
     // Main function to calculate everything
     calculateResults(answers) {
         const dimensions = this.calculateAllDimensions(answers);
         const indices = this.calculateCompositeIndices(dimensions);
-        const finalScore = this.calculateFinalScore(indices);
+        const gaps = this.calculateGapsAndStrength(dimensions);
+        const finalScore = this.calculateFinalScore(dimensions);
         const archetype = this.determineArchetype(finalScore);
-        const insights = this.generateInsights(dimensions, indices, archetype);
+        const roadmap = this.generateRoadmap(gaps);
+
+        // Calculate timeline using Section 8 answers
+        const timeCommitment = answers['Q26'] || '2-4';
+        const primaryGoal = answers['Q27'] || 'improve-consistency';
+        const recommendedTimelineMonths = this.calculateTimeline(timeCommitment, indices.LCI);
+
+        // Round all dimensions for easy display
+        const roundedDimensions = {};
+        for (const [key, val] of Object.entries(dimensions)) {
+            roundedDimensions[key] = Math.round(val);
+        }
 
         return {
-            dimensions: {
-                BP: Math.round(dimensions.BP),
-                BS: Math.round(dimensions.BS),
-                BC: Math.round(dimensions.BC)
-            },
+            dimensions: roundedDimensions,
             indices: {
-                CSI: Math.round(indices.CSI),
-                BRI: Math.round(indices.BRI),
-                BPI: Math.round(indices.BPI)
+                LCI: Math.round(indices.LCI)
+            },
+            gaps: {
+                primary: gaps.primaryGap,
+                secondary: gaps.secondaryGap,
+                strength: gaps.strengthLever
             },
             finalScore: finalScore,
             archetype: archetype,
-            insights: insights,
-            userName: answers['S6Q1'] ? 'Baker' : 'Baker'
+            roadmap: roadmap,
+            meta: {
+                recommendedMonths: recommendedTimelineMonths,
+                primaryGoal: primaryGoal,
+                timeCommitment: timeCommitment
+            },
+            userName: AppState.userName || 'Baker'
         };
     }
 };
