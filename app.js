@@ -142,35 +142,65 @@ function renderQuestion(direction = 'none') {
 
 function renderQuestionInput(question) {
     const currentAnswer = AppState.answers[question.id];
-    const selectedValue = parseInt(currentAnswer) || 0;
 
-    return `
-        <div class="personality-scale">
-            <span class="scale-label scale-label-left">Disagree</span>
-            <div class="scale-circles">
-                ${[1, 2, 3, 4, 5].map(val => {
-        const sizeClass = val === 1 || val === 5 ? 'size-lg' : val === 2 || val === 4 ? 'size-md' : 'size-sm';
-        return `<div class="scale-circle ${sizeClass} ${selectedValue === val ? 'selected' : ''}" data-value="${val}"></div>`;
-    }).join('')}
+    if (question.type === 'likert') {
+        const selectedValue = parseInt(currentAnswer) || 0;
+        return `
+            <div class="personality-scale">
+                <span class="scale-label scale-label-left">Disagree</span>
+                <div class="scale-circles">
+                    ${[1, 2, 3, 4, 5].map(val => {
+            const sizeClass = val === 1 || val === 5 ? 'size-lg' : val === 2 || val === 4 ? 'size-md' : 'size-sm';
+            return `<div class="scale-circle ${sizeClass} ${selectedValue === val ? 'selected' : ''}" data-value="${val}"></div>`;
+        }).join('')}
+                </div>
+                <span class="scale-label scale-label-right">Agree</span>
             </div>
-            <span class="scale-label scale-label-right">Agree</span>
-        </div>
-    `;
+        `;
+    } else if (question.type === 'single') {
+        // Render vertical choice buttons for Section 8
+        return `
+            <div class="choice-options">
+                ${question.options.map(option => `
+                    <div class="choice-item ${currentAnswer === option.value ? 'selected' : ''}" data-value="${option.value}">
+                        <div class="choice-radio"></div>
+                        <span class="choice-label">${option.label}</span>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+    return '';
 }
 
 function attachQuestionListeners(question) {
-    const scaleCircles = document.querySelectorAll('.scale-circle');
-    scaleCircles.forEach(circle => {
-        circle.addEventListener('click', () => {
-            const value = circle.dataset.value;
-            AppState.answers[question.id] = value;
+    if (question.type === 'likert') {
+        const scaleCircles = document.querySelectorAll('.scale-circle');
+        scaleCircles.forEach(circle => {
+            circle.addEventListener('click', () => {
+                const value = circle.dataset.value;
+                AppState.answers[question.id] = value;
 
-            scaleCircles.forEach(c => c.classList.remove('selected'));
-            circle.classList.add('selected');
+                scaleCircles.forEach(c => c.classList.remove('selected'));
+                circle.classList.add('selected');
 
-            setTimeout(() => nextQuestion(), 400);
+                setTimeout(() => nextQuestion(), 400);
+            });
         });
-    });
+    } else if (question.type === 'single') {
+        const choiceItems = document.querySelectorAll('.choice-item');
+        choiceItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const value = item.dataset.value;
+                AppState.answers[question.id] = value;
+
+                choiceItems.forEach(c => c.classList.remove('selected'));
+                item.classList.add('selected');
+
+                setTimeout(() => nextQuestion(), 400);
+            });
+        });
+    }
 }
 
 function updateProgress() {
