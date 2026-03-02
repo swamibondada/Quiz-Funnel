@@ -56,22 +56,19 @@ const ScoringEngine = {
         // Simple mapping based on option values from quizData
         const scoreMap = {
             // Baking (Q2)
-            'basics': 25,
-            'consistency': 50,
-            'scaling': 75,
-            'efficiency': 90,
+            'basics': 30,
+            'consistency': 65,
+            'efficiency': 95,
 
             // Decoration (Q3)
             'scared': 20,
-            'basic': 45,
-            'confident': 70,
+            'basic': 55,
             'advanced_art': 95,
 
             // Business (Q4)
-            'guess': 15,
-            'market': 40,
-            'guilt': 65,
-            'system': 90
+            'guess': 20,
+            'market': 55,
+            'system': 95
         };
 
         return scoreMap[answer] || 50;
