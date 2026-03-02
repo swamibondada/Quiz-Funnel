@@ -1,154 +1,375 @@
-// Quiz Data Structure for Diamond Program Quiz Funnel
+// DVA 360° Bakery Performance Audit™ Data Structure
 
 const quizData = {
-    // Section 1 - Core Identification & Skills
-    section1: {
-        id: 'skill-assessment',
-        title: 'Baking & Business Assessment',
-        subtitle: 'Identify your current level and goals',
-        icon: '📋',
-        scored: true,
-        questions: [
-            {
-                id: 'Q1',
-                type: 'single',
-                text: 'Which best describes you?',
-                options: [
-                    { value: 'beginner', label: 'I am a beginner and don’t know much about baking or recipes' },
-                    { value: 'experienced', label: 'I am an experienced baker and confident in baking & decoration' },
-                    { value: 'business', label: 'I know baking well and only want to learn business' }
-                ]
-            },
-            {
-                id: 'Q2',
-                type: 'single',
-                text: 'When it comes to following recipes, what is your biggest challenge?',
-                options: [
-                    { value: 'basics', label: 'I struggle with why cakes sink or rise unevenly' },
-                    { value: 'consistency', label: 'I can follow a recipe but results aren\'t consistent' },
-                    { value: 'efficiency', label: 'I want to scale my product line and need better systems' }
-                ]
-            },
-            {
-                id: 'Q3',
-                type: 'single',
-                text: 'How do you feel about your cake decoration skills?',
-                options: [
-                    { value: 'scared', label: 'I am scared to even pick up a piping bag' },
-                    { value: 'basic', label: 'I do basic icing but it lacks a professional finish' },
-                    { value: 'advanced_art', label: 'I want to master high-end sugar flowers and artistry' }
-                ]
-            },
-            {
-                id: 'Q4',
-                type: 'single',
-                text: 'How do you currently handle pricing for your orders?',
-                options: [
-                    { value: 'guess', label: 'I don\'t know my costs and guestimate prices' },
-                    { value: 'market', label: 'I price based on what others charge locally' },
-                    { value: 'system', label: 'I have a system but want to increase profitability' }
-                ]
-            },
-            {
-                id: 'Q5',
-                type: 'single',
-                text: 'What would 3 months of expert coaching change for you?',
-                options: [
-                    { value: 'perfect_sponge', label: 'I\'d bake a perfect sponge for my family/friends' },
-                    { value: 'paid_orders', label: 'I\'d start taking paid orders with confidence' },
-                    { value: 'scale_business', label: 'I\'d scale my hobby into a 5-figure business' }
-                ]
-            },
-            {
-                id: 'Q6',
-                type: 'single',
-                text: 'What is your biggest dream for your baking journey?',
-                options: [
-                    { value: 'hobby_to_venture', label: 'Turning my creative hobby into a small venture' },
-                    { value: 'go_to_baker', label: 'Becoming the go-to baker in my local area' },
-                    { value: 'premium_brand', label: 'Building a premium brand with financial freedom' }
-                ]
-            },
-            {
-                id: 'Q7',
-                type: 'single',
-                text: 'How much time can you dedicate to growing your skills?',
-                options: [
-                    { value: 'few_hours', label: 'A few hours on weekends' },
-                    { value: 'daily_consistency', label: '1-2 hours of daily consistent practice' },
-                    { value: 'full_time', label: 'I am ready to go all-in full time' }
-                ]
-            }
+    // Instructions & Setup
+    auditInfo: {
+        title: "DVA 360° Bakery Performance Audit™",
+        instructions: [
+            "There are no right or wrong answers.",
+            "Answer based on your current consistency, not one-time success.",
+            "Choose the option that reflects what is true for you most of the time."
         ]
+    },
+
+    // 8 Audit Sections
+    sections: {
+        BFS: {
+            id: 'BFS',
+            title: 'Baking Foundations',
+            questions: [
+                {
+                    id: 'Q1',
+                    text: 'When baking sponge cakes, my texture consistency is:',
+                    options: [
+                        { val: 1, label: 'A) Sometimes perfect, sometimes dense or uneven' },
+                        { val: 2, label: 'B) Mostly consistent with small variations' },
+                        { val: 3, label: 'C) Consistently soft, even, and reliable' }
+                    ]
+                },
+                {
+                    id: 'Q2',
+                    text: 'I understand ingredient functions (flour, fat, sugar, leavening) and how they affect results:',
+                    options: [
+                        { val: 1, label: 'A) Not clearly — I mostly follow recipes blindly' },
+                        { val: 2, label: 'B) I understand basic concepts' },
+                        { val: 3, label: 'C) I clearly understand and can troubleshoot' }
+                    ]
+                },
+                {
+                    id: 'Q3',
+                    text: 'When something fails, I can identify the cause:',
+                    options: [
+                        { val: 1, label: 'A) I feel confused and retry randomly' },
+                        { val: 2, label: 'B) I guess the reason' },
+                        { val: 3, label: 'C) I know exactly what likely went wrong' }
+                    ]
+                },
+                {
+                    id: 'Q4',
+                    text: 'I can bake multiple core products (cakes, cookies, brownies, breads) confidently:',
+                    options: [
+                        { val: 1, label: 'A) Only 1–2 items confidently' },
+                        { val: 2, label: 'B) 3–4 categories with moderate confidence' },
+                        { val: 3, label: 'C) 5+ categories confidently' }
+                    ]
+                }
+            ]
+        },
+        REX: {
+            id: 'REX',
+            title: 'Recipe Execution & Consistency',
+            questions: [
+                {
+                    id: 'Q5',
+                    text: 'When I repeat the same recipe, results are:',
+                    options: [
+                        { val: 1, label: 'A) Inconsistent' },
+                        { val: 2, label: 'B) Mostly consistent' },
+                        { val: 3, label: 'C) Highly consistent' }
+                    ]
+                },
+                {
+                    id: 'Q6',
+                    text: 'I measure ingredients accurately and follow process discipline:',
+                    options: [
+                        { val: 1, label: 'A) Sometimes approximate' },
+                        { val: 2, label: 'B) Mostly accurate' },
+                        { val: 3, label: 'C) Always precise' }
+                    ]
+                },
+                {
+                    id: 'Q7',
+                    text: 'I can execute bulk quantities without stress:',
+                    options: [
+                        { val: 1, label: 'A) I feel overwhelmed' },
+                        { val: 2, label: 'B) I manage but feel pressure' },
+                        { val: 3, label: 'C) I execute calmly with system' }
+                    ]
+                },
+                {
+                    id: 'Q8',
+                    text: 'I maintain hygiene and professional standards consistently:',
+                    options: [
+                        { val: 1, label: 'A) Informally managed' },
+                        { val: 2, label: 'B) Mostly maintained' },
+                        { val: 3, label: 'C) Professionally maintained' }
+                    ]
+                }
+            ]
+        },
+        FDS: {
+            id: 'FDS',
+            title: 'Frosting, Decoration & Finish',
+            questions: [
+                {
+                    id: 'Q9',
+                    text: 'My frosting consistency is:',
+                    options: [
+                        { val: 1, label: 'A) Unpredictable' },
+                        { val: 2, label: 'B) Mostly stable' },
+                        { val: 3, label: 'C) Reliable and smooth' }
+                    ]
+                },
+                {
+                    id: 'Q10',
+                    text: 'My cake finishing looks:',
+                    options: [
+                        { val: 1, label: 'A) Homemade' },
+                        { val: 2, label: 'B) Neat but simple' },
+                        { val: 3, label: 'C) Premium and professional' }
+                    ]
+                },
+                {
+                    id: 'Q11',
+                    text: 'I can execute theme/custom cakes confidently:',
+                    options: [
+                        { val: 1, label: 'A) Rarely' },
+                        { val: 2, label: 'B) Sometimes' },
+                        { val: 3, label: 'C) Yes, comfortably' }
+                    ]
+                },
+                {
+                    id: 'Q12',
+                    text: 'I charge confidently for decoration effort:',
+                    options: [
+                        { val: 1, label: 'A) I undercharge' },
+                        { val: 2, label: 'B) I estimate roughly' },
+                        { val: 3, label: 'C) I price strategically' }
+                    ]
+                }
+            ]
+        },
+        ATS: {
+            id: 'ATS',
+            title: 'Advanced Techniques & Specialisation',
+            questions: [
+                {
+                    id: 'Q13',
+                    text: 'I have at least one strong specialisation (e.g., fondant, chocolates, sugar flowers):',
+                    options: [
+                        { val: 1, label: 'A) No clear specialisation' },
+                        { val: 2, label: 'B) Learning one area' },
+                        { val: 3, label: 'C) Yes, strong skill depth' }
+                    ]
+                },
+                {
+                    id: 'Q14',
+                    text: 'I can create premium, high-value products:',
+                    options: [
+                        { val: 1, label: 'A) Not yet' },
+                        { val: 2, label: 'B) With guidance' },
+                        { val: 3, label: 'C) Independently' }
+                    ]
+                },
+                {
+                    id: 'Q15',
+                    text: 'I actively experiment and innovate:',
+                    options: [
+                        { val: 1, label: 'A) Rarely' },
+                        { val: 2, label: 'B) Occasionally' },
+                        { val: 3, label: 'C) Regularly' }
+                    ]
+                }
+            ]
+        },
+        BPS: {
+            id: 'BPS',
+            title: 'Business & Profitability',
+            questions: [
+                {
+                    id: 'Q16',
+                    text: 'I calculate cost per product including overheads:',
+                    options: [
+                        { val: 1, label: 'A) No clear costing' },
+                        { val: 2, label: 'B) Basic costing' },
+                        { val: 3, label: 'C) Detailed profit calculation' }
+                    ]
+                },
+                {
+                    id: 'Q17',
+                    text: 'I track monthly revenue & expenses:',
+                    options: [
+                        { val: 1, label: 'A) No tracking' },
+                        { val: 2, label: 'B) Rough tracking' },
+                        { val: 3, label: 'C) Structured tracking' }
+                    ]
+                },
+                {
+                    id: 'Q18',
+                    text: 'I have a clear monthly revenue target:',
+                    options: [
+                        { val: 1, label: 'A) No fixed number' },
+                        { val: 2, label: 'B) General idea' },
+                        { val: 3, label: 'C) Specific target' }
+                    ]
+                },
+                {
+                    id: 'Q19',
+                    text: 'I know how to market & generate consistent orders:',
+                    options: [
+                        { val: 1, label: 'A) I depend on referrals' },
+                        { val: 2, label: 'B) I try social media sometimes' },
+                        { val: 3, label: 'C) I have structured marketing approach' }
+                    ]
+                }
+            ]
+        },
+        WSS: {
+            id: 'WSS',
+            title: 'Workflow, Speed & Capacity',
+            questions: [
+                {
+                    id: 'Q20',
+                    text: 'I can manage multiple orders simultaneously:',
+                    options: [
+                        { val: 1, label: 'A) I feel stressed' },
+                        { val: 2, label: 'B) I manage but feel stretched' },
+                        { val: 3, label: 'C) I manage confidently' }
+                    ]
+                },
+                {
+                    id: 'Q21',
+                    text: 'My time management for baking is:',
+                    options: [
+                        { val: 1, label: 'A) Mood-based' },
+                        { val: 2, label: 'B) Semi-structured' },
+                        { val: 3, label: 'C) Scheduled and disciplined' }
+                    ]
+                },
+                {
+                    id: 'Q22',
+                    text: 'Delivery and logistics are:',
+                    options: [
+                        { val: 1, label: 'A) Stressful' },
+                        { val: 2, label: 'B) Manageable' },
+                        { val: 3, label: 'C) System-driven' }
+                    ]
+                }
+            ]
+        },
+        LCL: {
+            id: 'LCL',
+            title: 'Learning Clarity',
+            questions: [
+                {
+                    id: 'Q23',
+                    text: 'I know exactly what skill I need to improve next:',
+                    options: [
+                        { val: 1, label: 'A) I feel confused' },
+                        { val: 2, label: 'B) I have some clarity' },
+                        { val: 3, label: 'C) I am very clear' }
+                    ]
+                },
+                {
+                    id: 'Q24',
+                    text: 'I often feel overwhelmed by too many recipes or learning options:',
+                    options: [
+                        { val: 1, label: 'A) Very often' },
+                        { val: 2, label: 'B) Sometimes' },
+                        { val: 3, label: 'C) Rarely' }
+                    ]
+                },
+                {
+                    id: 'Q25',
+                    text: 'I jump from one course/video to another without finishing:',
+                    options: [
+                        { val: 1, label: 'A) Frequently' },
+                        { val: 2, label: 'B) Occasionally' },
+                        { val: 3, label: 'C) Rarely' }
+                    ]
+                }
+            ]
+        },
+        MSI: {
+            id: 'MSI',
+            title: 'Mindset Stability Index',
+            questions: [
+                {
+                    id: 'Q26',
+                    text: 'I quote prices confidently without fear:',
+                    options: [
+                        { val: 1, label: 'A) I hesitate' },
+                        { val: 2, label: 'B) I try but feel nervous' },
+                        { val: 3, label: 'C) I quote calmly' }
+                    ]
+                },
+                {
+                    id: 'Q27',
+                    text: 'Rejections reduce my motivation:',
+                    options: [
+                        { val: 1, label: 'A) Yes, significantly' },
+                        { val: 2, label: 'B) Slightly' },
+                        { val: 3, label: 'C) No, I stay focused' }
+                    ]
+                },
+                {
+                    id: 'Q28',
+                    text: 'I take action even when I feel self-doubt:',
+                    options: [
+                        { val: 1, label: 'A) Rarely' },
+                        { val: 2, label: 'B) Sometimes' },
+                        { val: 3, label: 'C) Consistently' }
+                    ]
+                },
+                {
+                    id: 'Q29',
+                    text: 'I believe I can build a ₹1 Lakh/month baking business:',
+                    options: [
+                        { val: 1, label: 'A) I doubt it' },
+                        { val: 2, label: 'B) I hope so' },
+                        { val: 3, label: 'C) I believe it is possible' }
+                    ]
+                },
+                {
+                    id: 'Q30',
+                    text: 'When it comes to investing time, effort, or money in improving my baking business:',
+                    options: [
+                        { val: 1, label: 'A) I hesitate and overthink' },
+                        { val: 2, label: 'B) I invest only when I feel fully ready' },
+                        { val: 3, label: 'C) I decide based on growth potential and long-term ROI' }
+                    ]
+                }
+            ]
+        }
     }
 };
 
-// Section order for navigation
-const sectionOrder = ['section1'];
+// Flattened question list for logic
+const auditQuestionOrder = [
+    'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10',
+    'Q11', 'Q12', 'Q13', 'Q14', 'Q15', 'Q16', 'Q17', 'Q18', 'Q19', 'Q20',
+    'Q21', 'Q22', 'Q23', 'Q24', 'Q25', 'Q26', 'Q27', 'Q28', 'Q29', 'Q30'
+];
 
-// Archetype definitions based on Q1 selection
-const archetypes = {
-    beginner: {
-        id: 'beginner',
-        name: 'Beginner Baker',
-        icon: '🌱',
-        color: '#6366f1',
-        validation: 'It is so brave to start something new! Every master baker you admire once stood right where you are. Your passion is the perfect foundation, and with the right steps, you\'ll be baking professional-grade cakes sooner than you think.',
-        roadmap: {
-            start: 'Beginner Baking Modules',
-            focus: 'Mastering the Perfect Sponge & Basic Science',
-            why: 'Building a fail-proof foundation prevents frustration and wasted ingredients, giving you the confidence to grow.',
-            transition: 'Once you master the basics, you\'ll naturally unlock Advanced Decoration and Business Systems.'
-        }
-    },
-    experienced: {
-        id: 'experienced',
-        name: 'Experienced Baker',
-        icon: '🏆',
-        color: '#f59e0b',
-        validation: 'You have moving past the basics and already have technical skills under your belt! Now is the time to reach the pinnacle of baking artistry and professional branding. You are ready for the big leagues!',
-        roadmap: {
-            start: 'Advanced Baking + Decoration Mastery',
-            focus: 'High-End Artistry & Signature Style',
-            why: 'Mastering advanced techniques sets you apart in the market, making you the obvious choice for premium clients.',
-            transition: 'With your artistry solidified, the Business Growth modules will help you scale and automate your success.'
-        }
-    },
-    business: {
-        id: 'business',
-        name: 'Business-Focused Baker',
-        icon: '💰',
-        color: '#ec4899',
-        validation: 'You\'re a talented baker who understands that a successful business needs more than just great recipes. You have the heart of an entrepreneur, and you\'re ready to build a system that works for you.',
-        roadmap: {
-            start: 'Business & Sales Modules First',
-            focus: 'Pricing Strategy, Marketing & Sales Systems',
-            why: 'Focusing on the business side first ensures your hard work translates into real profit and a sustainable lifestyle.',
-            transition: 'While we scale your business, you\'ll have full access to refine any technical skills through our advanced modules.'
-        }
-    }
+// Mapping questions to dimensions
+const dimensionMapping = {
+    BFS: ['Q1', 'Q2', 'Q3', 'Q4'],
+    REX: ['Q5', 'Q6', 'Q7', 'Q8'],
+    FDS: ['Q9', 'Q10', 'Q11', 'Q12'],
+    ATS: ['Q13', 'Q14', 'Q15'],
+    BPS: ['Q16', 'Q17', 'Q18', 'Q19'],
+    WSS: ['Q20', 'Q21', 'Q22'],
+    LCL: ['Q23', 'Q24', 'Q25'],
+    MSI: ['Q26', 'Q27', 'Q28', 'Q29', 'Q30']
 };
 
-const diamondEcosystem = {
-    title: 'The Diamond Program Ecosystem',
-    description: 'The Diamond Program is more than just a course; it\'s a complete ecosystem designed to take you from hobbyist to high-earning professional baker.',
-    pillars: [
-        {
-            title: 'Baking Mastery',
-            desc: 'From beginner foundations to advanced, fail-proof recipes that keep customers coming back.',
-            icon: '🧁'
-        },
-        {
-            title: 'Advanced Decoration',
-            desc: 'Master the art of high-end decoration, theme cakes, and professional finishing that WOWs every time.',
-            icon: '🎨'
-        },
-        {
-            title: 'Business & Sales',
-            desc: 'The complete system for pricing, marketing, and scaling your home bakery into a profitable brand.',
-            icon: '📊'
-        }
-    ],
-    closing: 'Diamond contains everything you need to succeed, but your path inside it will be customized to YOUR current level and goals. You don\'t have to figure it out alone.',
-    ctaText: 'Start My Personalized Diamond Journey'
+const dimensionNames = {
+    BFS: 'Baking Foundations',
+    REX: 'Recipe Execution & Consistency',
+    FDS: 'Frosting, Decoration & Finish',
+    ATS: 'Advanced Techniques & Specialisation',
+    BPS: 'Business & Profitability',
+    WSS: 'Workflow, Speed & Capacity',
+    LCL: 'Learning Clarity',
+    MSI: 'Mindset Stability Index'
+};
+
+const coursemapping = {
+    BFS: 'Super Baker Foundation',
+    REX: 'Cake Baking & Icing / Core Recipes',
+    FDS: 'Frosting Mastery / Theme Cakes',
+    ATS: 'Chocolates / Ice Cream Cakes / Specialisation',
+    BPS: 'Home Bakery Profitability',
+    WSS: 'Bake-a-thon / Business Setup',
+    MSI: 'Millionaire Morning Program / Identity Work'
 };

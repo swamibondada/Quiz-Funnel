@@ -1,5 +1,4 @@
-// Dipti Baking Skill Alignment Quiz - Main Application Logic
-// Exact Structural Clone of Premium Reference
+// DVA 360° Bakery Performance Audit™ - Main Application Logic
 
 // App State
 const AppState = {
@@ -31,25 +30,49 @@ function init() {
     // Build flat question array
     AppState.allQuestions = getAllQuestions();
 
+    // Update Welcome Screen content for DVA Audit
+    updateWelcomeScreen();
+
     DOM.startBtn.addEventListener('click', startQuiz);
     DOM.prevBtn.addEventListener('click', prevQuestion);
     DOM.nextBtn.addEventListener('click', nextQuestion);
 }
 
+function updateWelcomeScreen() {
+    const welcomeTitle = document.querySelector('#welcome-screen h1');
+    const welcomeDesc = document.querySelector('#welcome-screen .welcome-desc');
+
+    if (welcomeTitle) welcomeTitle.innerText = quizData.auditInfo.title;
+    if (welcomeDesc) {
+        welcomeDesc.innerHTML = `
+            <div class="audit-instructions">
+                ${quizData.auditInfo.instructions.map(inst => `<p>• ${inst}</p>`).join('')}
+            </div>
+        `;
+    }
+}
+
 // Flatten all questions from sections into single array
 function getAllQuestions() {
     const questions = [];
-    sectionOrder.forEach(sectionKey => {
-        const section = quizData[sectionKey];
-        section.questions.forEach(question => {
+    auditQuestionOrder.forEach(qId => {
+        // Find which section this question belongs to
+        let foundSection = null;
+        for (const [secId, secData] of Object.entries(quizData.sections)) {
+            const qData = secData.questions.find(q => q.id === qId);
+            if (qData) {
+                foundSection = { secId, ...secData, qData };
+                break;
+            }
+        }
+
+        if (foundSection) {
             questions.push({
-                ...question,
-                sectionKey: sectionKey,
-                sectionTitle: section.title,
-                sectionIcon: section.icon,
-                sectionSubtitle: section.subtitle
+                ...foundSection.qData,
+                sectionId: foundSection.secId,
+                sectionTitle: foundSection.title
             });
-        });
+        }
     });
     return questions;
 }
@@ -57,9 +80,9 @@ function getAllQuestions() {
 // Navigation Functions
 function showScreen(screenName) {
     Object.values(DOM.screens).forEach(screen => {
-        screen.classList.remove('active');
+        if (screen) screen.classList.remove('active');
     });
-    DOM.screens[screenName].classList.add('active');
+    if (DOM.screens[screenName]) DOM.screens[screenName].classList.add('active');
     AppState.currentScreen = screenName;
     window.scrollTo(0, 0);
 }
@@ -95,7 +118,7 @@ function validateCurrentQuestion() {
     const answer = AppState.answers[question.id];
     const questionCard = document.querySelector('.question-card');
 
-    if (!answer) {
+    if (answer === undefined) {
         if (questionCard) {
             questionCard.classList.add('shake');
             setTimeout(() => questionCard.classList.remove('shake'), 500);
@@ -122,7 +145,6 @@ function renderQuestion(direction = 'none') {
     const html = `
         <div class="question-wrapper ${animationClass}">
             <div class="section-indicator">
-                <span class="section-icon">${question.sectionIcon}</span>
                 <span class="section-name">${question.sectionTitle}</span>
             </div>
             <div class="question-card" data-question-id="${question.id}">
@@ -130,7 +152,14 @@ function renderQuestion(direction = 'none') {
                     <span class="question-number">${questionNumber}.</span>
                     ${question.text}
                 </p>
-                ${renderQuestionInput(question)}
+                <div class="choice-options">
+                    ${question.options.map(option => `
+                        <div class="choice-item ${AppState.answers[question.id] === option.val ? 'selected' : ''}" data-value="${option.val}">
+                            <div class="choice-radio"></div>
+                            <span class="choice-label">${option.label}</span>
+                        </div>
+                    `).join('')}
+                </div>
             </div>
         </div>
     `;
@@ -140,67 +169,19 @@ function renderQuestion(direction = 'none') {
     window.scrollTo(0, 0);
 }
 
-function renderQuestionInput(question) {
-    const currentAnswer = AppState.answers[question.id];
-
-    if (question.type === 'likert') {
-        const selectedValue = parseInt(currentAnswer) || 0;
-        return `
-            <div class="personality-scale">
-                <span class="scale-label scale-label-left">Disagree</span>
-                <div class="scale-circles">
-                    ${[1, 2, 3, 4, 5].map(val => {
-            const sizeClass = val === 1 || val === 5 ? 'size-lg' : val === 2 || val === 4 ? 'size-md' : 'size-sm';
-            return `<div class="scale-circle ${sizeClass} ${selectedValue === val ? 'selected' : ''}" data-value="${val}"></div>`;
-        }).join('')}
-                </div>
-                <span class="scale-label scale-label-right">Agree</span>
-            </div>
-        `;
-    } else if (question.type === 'single') {
-        // Render vertical choice buttons for Section 8
-        return `
-            <div class="choice-options">
-                ${question.options.map(option => `
-                    <div class="choice-item ${currentAnswer === option.value ? 'selected' : ''}" data-value="${option.value}">
-                        <div class="choice-radio"></div>
-                        <span class="choice-label">${option.label}</span>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-    }
-    return '';
-}
-
 function attachQuestionListeners(question) {
-    if (question.type === 'likert') {
-        const scaleCircles = document.querySelectorAll('.scale-circle');
-        scaleCircles.forEach(circle => {
-            circle.addEventListener('click', () => {
-                const value = circle.dataset.value;
-                AppState.answers[question.id] = value;
+    const choiceItems = document.querySelectorAll('.choice-item');
+    choiceItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const value = parseInt(item.dataset.value);
+            AppState.answers[question.id] = value;
 
-                scaleCircles.forEach(c => c.classList.remove('selected'));
-                circle.classList.add('selected');
+            choiceItems.forEach(c => c.classList.remove('selected'));
+            item.classList.add('selected');
 
-                setTimeout(() => nextQuestion(), 400);
-            });
+            setTimeout(() => nextQuestion(), 400);
         });
-    } else if (question.type === 'single') {
-        const choiceItems = document.querySelectorAll('.choice-item');
-        choiceItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const value = item.dataset.value;
-                AppState.answers[question.id] = value;
-
-                choiceItems.forEach(c => c.classList.remove('selected'));
-                item.classList.add('selected');
-
-                setTimeout(() => nextQuestion(), 400);
-            });
-        });
-    }
+    });
 }
 
 function updateProgress() {
@@ -213,7 +194,7 @@ function updateProgress() {
 function updateNavigation() {
     DOM.prevBtn.disabled = AppState.currentQuestionIndex === 0;
     const isLastQuestion = AppState.currentQuestionIndex === AppState.allQuestions.length - 1;
-    DOM.nextBtn.querySelector('span').textContent = isLastQuestion ? 'See My Results' : 'Next';
+    DOM.nextBtn.querySelector('span').textContent = isLastQuestion ? 'Generate Audit Report' : 'Next';
 }
 
 function calculateAndShowResults() {
@@ -224,90 +205,116 @@ function calculateAndShowResults() {
 
 function renderResults() {
     const { results } = AppState;
-    const { archetype, dimensions, roadmap, diamondEcosystem } = results;
+    if (!results) return;
+
+    const {
+        dimensions, dimensionNames, primaryGap, secondaryGap, strengthLever,
+        lci, overwhelmRisk, mriAlert, overallAvg, paceLabel, recommendations, roadmap, msiLowest
+    } = results;
 
     const html = `
         <div class="result-header fade-in">
-            <div class="brand-badge">YOUR PERSONALIZED ROADMAP</div>
-            <div class="archetype-banner" style="background: ${archetype.color}15; border: 1px solid ${archetype.color}30;">
-                <span class="archetype-icon">${archetype.icon}</span>
-                <h1 class="archetype-name" style="color: ${archetype.color};">${archetype.name}</h1>
-            </div>
-            <p class="validation-text">${archetype.validation}</p>
+            <div class="brand-badge">Bakery Performance Audit™ Report</div>
+            <h1 class="archetype-name" style="color: #6366f1;">Audit Results: ${overallAvg}% Performance</h1>
+            <p class="validation-text">Your diagnostic breakdown across 8 key baking and business dimensions.</p>
         </div>
 
+        <!-- Metric Cards Row -->
+        <div class="metric-grid fade-in">
+            <div class="metric-card">
+                <span class="metric-label">Overwhelm Risk</span>
+                <span class="metric-value ${overwhelmRisk.includes('High') ? 'text-red' : overwhelmRisk.includes('Medium') ? 'text-amber' : 'text-emerald'}">${overwhelmRisk}</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-label">Learning Pace</span>
+                <span class="metric-value text-indigo">${paceLabel}</span>
+            </div>
+        </div>
+
+        ${mriAlert ? `
+            <div class="alert-box alert-warning fade-in">
+                <div class="alert-icon">⚠️</div>
+                <div class="alert-content">
+                    <h4 class="alert-title">Mindset Stability Alert</h4>
+                    <p>${mriAlert}</p>
+                    ${msiLowest ? '<strong>Recommend: Address mindset before business scaling.</strong>' : ''}
+                </div>
+            </div>
+        ` : ''}
+
+        <!-- Skill Bars Section -->
         <div class="dimension-card fade-in" style="animation-delay: 0.2s;">
-            <h3 class="card-title">Your Current Skill Pillars</h3>
+            <h3 class="card-title">Dimension Performance Analysis</h3>
             <div class="dimension-bars-v">
-                ${Object.entries(dimensions).map(([name, score]) => `
-                    <div class="dim-bar-item">
-                        <div class="dim-bar-track">
-                            <div class="dim-bar-fill" style="height: ${score}%; background: ${archetype.color};"></div>
+                ${Object.entries(dimensions).map(([id, score]) => {
+        let color = '#10b981'; // Strong
+        if (score < 40) color = '#ef4444'; // Critical
+        else if (score < 60) color = '#f59e0b'; // Developing
+
+        return `
+                        <div class="dim-bar-item">
+                            <div class="dim-bar-track">
+                                <div class="dim-bar-fill" style="height: ${score}%; background: ${color};"></div>
+                            </div>
+                            <span class="dim-bar-label" title="${dimensionNames[id]}">${id}</span>
+                            <span class="dim-bar-score">${score}%</span>
                         </div>
-                        <span class="dim-bar-label">${name.split(' ')[0]}</span>
-                    </div>
-                `).join('')}
+                    `;
+    }).join('')}
+            </div>
+            <div class="bars-legend">
+                <span class="legend-item"><i style="background: #ef4444;"></i> Critical</span>
+                <span class="legend-item"><i style="background: #f59e0b;"></i> Developing</span>
+                <span class="legend-item"><i style="background: #10b981;"></i> Strong</span>
             </div>
         </div>
 
-        <div class="dimension-card fade-in" style="animation-delay: 0.4s;">
-            <h3 class="card-title">Success Mountain Roadmap</h3>
-            <div class="mountain-container">
-                <svg viewBox="0 0 400 200" class="mountain-svg">
-                    <!-- Path Background -->
-                    <path d="M50,180 Q100,160 150,140 T250,100 T350,40" class="mountain-path-bg" />
-                    <!-- Animated Path -->
-                    <path d="M50,180 Q100,160 150,140 T250,100 T350,40" class="mountain-path-animated" style="stroke: ${archetype.color};" />
-                    
-                    <!-- Checkpoints -->
-                    <g class="checkpoint" transform="translate(50, 180)">
-                        <circle r="6" fill="${archetype.color}" />
-                        <text y="20" text-anchor="middle" class="checkpoint-label">Start</text>
-                    </g>
-                    <g class="checkpoint" transform="translate(150, 140)">
-                        <circle r="6" fill="#cbd5e1" class="checkpoint-dot" />
-                        <text y="-15" text-anchor="middle" class="checkpoint-label">Growth</text>
-                    </g>
-                    <g class="checkpoint" transform="translate(350, 40)">
-                        <circle r="6" fill="#cbd5e1" class="checkpoint-dot" />
-                        <text y="-15" text-anchor="middle" class="checkpoint-label">Mastery</text>
-                    </g>
-                </svg>
+        <!-- Gap Analysis Section -->
+        <div class="gap-analysis-section">
+            <div class="gap-card primary-gap-card fade-in" style="animation-delay: 0.3s;">
+                <div class="gap-badge">PRIMARY GAP</div>
+                <h4 class="gap-title">${primaryGap.name}</h4>
+                <p class="gap-desc">Immediate attention required to stabilize your foundation.</p>
             </div>
-            
+            <div class="gap-card secondary-gap-card fade-in" style="animation-delay: 0.4s;">
+                <div class="gap-badge">SECONDARY GAP</div>
+                <h4 class="gap-title">${secondaryGap.name}</h4>
+                <p class="gap-desc">Growth area for structured improvement.</p>
+            </div>
+            <div class="gap-card strength-lever-card fade-in" style="animation-delay: 0.5s;">
+                <div class="gap-badge badge-strength">STRENGTH LEVER</div>
+                <h4 class="gap-title">${strengthLever.name}</h4>
+                <p class="gap-desc">Your competitive advantage to leverage for scaling.</p>
+            </div>
+        </div>
+
+        <!-- Personalized Roadmap -->
+        <div class="dimension-card fade-in" style="animation-delay: 0.6s;">
+            <h3 class="card-title">${results.planDuration}-Month Personalized Roadmap</h3>
             <div class="roadmap-phases">
                 ${roadmap.map((phase, i) => `
                     <div class="roadmap-phase-item ${i === 0 ? 'active' : ''}">
-                        <div class="phase-number" style="background: ${i === 0 ? archetype.color : '#e2e8f0'}; text-decoration: none;">${i + 1}</div>
+                        <div class="phase-number" style="background: ${i === 0 ? '#6366f1' : '#e2e8f0'}">${phase.months}</div>
                         <div class="phase-content">
                             <h4 class="phase-title">${phase.title}</h4>
-                            <div class="phase-focus">Focus: <strong>${phase.focus}</strong></div>
-                            <p class="phase-desc">${phase.description}</p>
-                            <a href="${phase.link}" class="session-link" style="color: ${archetype.color};">Go to Session →</a>
+                            <p class="phase-desc"><strong>Main Focus:</strong> ${phase.focus}</p>
+                            <div class="phase-recommendation">
+                                <strong>Recommended Program:</strong><br>
+                                <span>${phase.recommendation}</span>
+                            </div>
                         </div>
                     </div>
                 `).join('')}
             </div>
         </div>
 
-        <div class="ecosystem-section fade-in" style="animation-delay: 0.6s;">
-            <h2 class="ecosystem-title">${diamondEcosystem.title}</h2>
-            <p class="ecosystem-desc">${diamondEcosystem.description}</p>
-            
-            <div class="pillar-grid">
-                ${diamondEcosystem.pillars.map(pillar => `
-                    <div class="pillar-card">
-                        <span class="pillar-icon">${pillar.icon}</span>
-                        <h4 class="pillar-title">${pillar.title}</h4>
-                        <p class="pillar-desc">${pillar.desc}</p>
-                    </div>
-                `).join('')}
-            </div>
-            
+        <!-- Final CTA -->
+        <div class="ecosystem-section fade-in" style="animation-delay: 0.7s;">
             <div class="ecosystem-closing">
-                <p>${diamondEcosystem.closing}</p>
+                <h2 class="ecosystem-title">Unlock Full Accelerated Growth</h2>
+                <p>Based on your Audit Results, we have pre-selected the optimal path for you inside the Diamond Ecosystem.</p>
                 <button class="btn-primary btn-large" onclick="window.open('https://diptibaking.com/diamond', '_blank')">
-                    <span>${diamondEcosystem.ctaText}</span>
+                    <span>Unlock My Custom Roadmap</span>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
@@ -316,19 +323,11 @@ function renderResults() {
         </div>
 
         <div style="text-align: center; margin-top: var(--space-8); padding-bottom: var(--space-8);">
-            <button class="btn-secondary" onclick="location.reload()">Retake Quiz</button>
+            <button class="btn-secondary" onclick="location.reload()">Reset & Restart Audit</button>
         </div>
     `;
 
     DOM.resultsContainer.innerHTML = html;
-
-    // Animate the path drawing
-    setTimeout(() => {
-        const animatedPath = document.querySelector('.mountain-path-animated');
-        if (animatedPath) {
-            animatedPath.style.strokeDashoffset = '0';
-        }
-    }, 100);
 }
 
 // Initialize on DOM ready
