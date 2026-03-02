@@ -1,367 +1,173 @@
-// Quiz Data Structure
-// Dipti Baking Skill Alignment Quiz
+// Quiz Data Structure for Diamond Program Quiz Funnel
 
 const quizData = {
-    // Section 1 - Baking Foundations (BFS) - Likert 1-5 - SCORED
+    // Section 1 - Core Identification & Skills
     section1: {
-        id: 'baking-foundations',
-        title: 'Baking Foundations',
-        subtitle: 'Core understanding that affects consistency of results',
-        icon: '🧁',
+        id: 'skill-assessment',
+        title: 'Baking & Business Assessment',
+        subtitle: 'Identify your current level and goals',
+        icon: '📋',
         scored: true,
-        dimension: 'BFS',
         questions: [
             {
                 id: 'Q1',
-                type: 'likert',
-                text: 'My cake sponges rise evenly without sinking or cracking.',
-                negative: false
+                type: 'single',
+                text: 'Which best describes you?',
+                options: [
+                    { value: 'beginner', label: 'I am a beginner and don’t know much about baking or recipes' },
+                    { value: 'intermediate', label: 'I am an intermediate baker but want to improve' },
+                    { value: 'advanced', label: 'I am an advanced baker and confident in baking & decoration' },
+                    { value: 'business', label: 'I know baking well and only want to learn business' }
+                ]
             },
             {
                 id: 'Q2',
-                type: 'likert',
-                text: 'I understand how ingredients (fat, sugar, eggs, raising agents) affect texture.',
-                negative: false
+                type: 'single',
+                text: 'When it comes to following recipes, what is your biggest challenge?',
+                options: [
+                    { value: 'basics', label: 'I struggle with why cakes sink or rise unevenly' },
+                    { value: 'consistency', label: 'I can follow a recipe but results aren\'t consistent' },
+                    { value: 'scaling', label: 'I want to scale my product line and save time' },
+                    { value: 'efficiency', label: 'My workflow is slow and I need better systems' }
+                ]
             },
             {
                 id: 'Q3',
-                type: 'likert',
-                text: 'I can confidently troubleshoot common cake failures.',
-                negative: false
+                type: 'single',
+                text: 'How do you feel about your cake decoration skills?',
+                options: [
+                    { value: 'scared', label: 'I am scared to even pick up a piping bag' },
+                    { value: 'basic', label: 'I do basic icing but it lacks a professional finish' },
+                    { value: 'confident', label: 'I can handle sharp edges but want to master themes' },
+                    { value: 'advanced_art', label: 'I want to master high-end sugar flowers and artistry' }
+                ]
             },
             {
                 id: 'Q4',
-                type: 'likert',
-                text: 'I am comfortable using homemade premixes and storing baked products correctly.',
-                negative: false
-            }
-        ]
-    },
-
-    // Section 2 - Recipe Execution & Consistency (REX) - Likert 1-5 - SCORED
-    section2: {
-        id: 'recipe-execution',
-        title: 'Recipe Execution & Consistency',
-        subtitle: 'Your ability to produce reliable, repeatable results',
-        icon: '📋',
-        scored: true,
-        dimension: 'REX',
-        questions: [
+                type: 'single',
+                text: 'How do you currently handle pricing for your orders?',
+                options: [
+                    { value: 'guess', label: 'I don\'t know my costs and guestimate prices' },
+                    { value: 'market', label: 'I price based on what others charge localy' },
+                    { value: 'guilt', label: 'I know my costs but feel guilty charging premium' },
+                    { value: 'system', label: 'I have a system but want to increase profitability' }
+                ]
+            },
             {
                 id: 'Q5',
-                type: 'likert',
-                text: 'I can follow a recipe and reproduce the same result every time.',
-                negative: false
+                type: 'single',
+                text: 'What would 3 months of expert coaching change for you?',
+                options: [
+                    { value: 'perfect_sponge', label: 'I\'d bake a perfect sponge for my family/friends' },
+                    { value: 'paid_orders', label: 'I\'d start taking paid orders with confidence' },
+                    { value: 'scale_business', label: 'I\'d scale my hobby into a 5-figure business' },
+                    { value: 'master_artistry', label: 'I\'d become the most sought-after artist in town' }
+                ]
             },
             {
                 id: 'Q6',
-                type: 'likert',
-                text: 'My baked products taste balanced and professional.',
-                negative: false
+                type: 'single',
+                text: 'What is your biggest dream for your baking journey?',
+                options: [
+                    { value: 'hobby_to_venture', label: 'Turning my creative hobby into a small venture' },
+                    { value: 'go_to_baker', label: 'Becoming the go-to baker in my local area' },
+                    { value: 'premium_brand', label: 'Building a premium brand with professional recognition' },
+                    { value: 'financial_freedom', label: 'Financial freedom through a structured business' }
+                ]
             },
             {
                 id: 'Q7',
-                type: 'likert',
-                text: 'I feel confident executing multiple recipes without confusion.',
-                negative: false
-            },
-            {
-                id: 'Q8',
-                type: 'likert',
-                text: 'I can execute recipes across cakes, cookies, brownies, or breads reliably.',
-                negative: false
-            }
-        ]
-    },
-
-    // Section 3 - Frosting, Decoration & Finish (FDS) - Likert 1-5 - SCORED
-    section3: {
-        id: 'frosting-decoration',
-        title: 'Frosting, Decoration & Finish',
-        subtitle: 'The visual and textural quality of your finished products',
-        icon: '🎨',
-        scored: true,
-        dimension: 'FDS',
-        questions: [
-            {
-                id: 'Q9',
-                type: 'likert',
-                text: 'My frosting texture (whipped cream, ganache, buttercream) comes out right consistently.',
-                negative: false
-            },
-            {
-                id: 'Q10',
-                type: 'likert',
-                text: 'I can finish cakes neatly without cracks, air bubbles, or uneven edges.',
-                negative: false
-            },
-            {
-                id: 'Q11',
-                type: 'likert',
-                text: 'I feel confident attempting decorative or themed cakes.',
-                negative: false
-            },
-            {
-                id: 'Q12',
-                type: 'likert',
-                text: 'My final product looks premium and sell‑ready.',
-                negative: false
-            }
-        ]
-    },
-
-    // Section 4 - Advanced Techniques & Specialisation (ATS) - Likert 1-5 - SCORED
-    section4: {
-        id: 'advanced-techniques',
-        title: 'Advanced Techniques & Specialisation',
-        subtitle: 'Your comfort with higher-level baking skills',
-        icon: '🏆',
-        scored: true,
-        dimension: 'ATS',
-        questions: [
-            {
-                id: 'Q13',
-                type: 'likert',
-                text: 'I am confident working with advanced techniques (theme cakes, fondant, sugar flowers, chocolates).',
-                negative: false
-            },
-            {
-                id: 'Q14',
-                type: 'likert',
-                text: 'I know which advanced skills suit my current level.',
-                negative: false
-            },
-            {
-                id: 'Q15',
-                type: 'likert',
-                text: 'I feel clear about which specialisations I should not focus on yet.',
-                negative: false
-            }
-        ]
-    },
-
-    // Section 5 - Business & Profitability (BPS) - Likert 1-5 - SCORED
-    section5: {
-        id: 'business-profitability',
-        title: 'Business & Profitability',
-        subtitle: 'How well you manage the financial side of baking',
-        icon: '💰',
-        scored: true,
-        dimension: 'BPS',
-        questions: [
-            {
-                id: 'Q16',
-                type: 'likert',
-                text: 'I know my exact cost per product.',
-                negative: false
-            },
-            {
-                id: 'Q17',
-                type: 'likert',
-                text: 'I price my products confidently without second‑guessing.',
-                negative: false
-            },
-            {
-                id: 'Q18',
-                type: 'likert',
-                text: 'I track expenses, profits, and budgets consistently.',
-                negative: false
-            },
-            {
-                id: 'Q19',
-                type: 'likert',
-                text: 'My baking efforts feel financially worthwhile.',
-                negative: false
-            }
-        ]
-    },
-
-    // Section 6 - Workflow, Speed & Capacity (WSS) - Likert 1-5 - SCORED
-    section6: {
-        id: 'workflow-speed',
-        title: 'Workflow, Speed & Capacity',
-        subtitle: 'How efficiently you manage your baking operations',
-        icon: '⚡',
-        scored: true,
-        dimension: 'WSS',
-        questions: [
-            {
-                id: 'Q20',
-                type: 'likert',
-                text: 'I can handle multiple orders without stress.',
-                negative: false
-            },
-            {
-                id: 'Q21',
-                type: 'likert',
-                text: 'My baking workflow is organised and efficient.',
-                negative: false
-            },
-            {
-                id: 'Q22',
-                type: 'likert',
-                text: 'I finish orders on time without last‑minute panic.',
-                negative: false
-            }
-        ]
-    },
-
-    // Section 7 - Learning Clarity (LCL) - Likert 1-5 - SCORED (Q24, Q25 reverse scored)
-    section7: {
-        id: 'learning-clarity',
-        title: 'Learning Clarity',
-        subtitle: 'How focused and directed your learning journey is',
-        icon: '🎯',
-        scored: true,
-        dimension: 'LCL',
-        questions: [
-            {
-                id: 'Q23',
-                type: 'likert',
-                text: 'I know exactly which courses I should focus on right now.',
-                negative: false
-            },
-            {
-                id: 'Q24',
-                type: 'likert',
-                text: 'I often feel overwhelmed by the number of available courses.',
-                negative: true
-            },
-            {
-                id: 'Q25',
-                type: 'likert',
-                text: 'I jump between courses without completing them.',
-                negative: true
-            }
-        ]
-    },
-
-    // Section 8 - Time & Commitment (TC) - Single Choice - NOT SCORED
-    section8: {
-        id: 'time-commitment',
-        title: 'Time & Commitment',
-        subtitle: 'Your available time and current goals',
-        icon: '⏰',
-        scored: false,
-        questions: [
-            {
-                id: 'Q26',
                 type: 'single',
-                text: 'How much time can you realistically dedicate to learning per week?',
+                text: 'How much time can you dedicate to growing your skills?',
                 options: [
-                    { value: 'less-than-2', label: 'Less than 2 hours' },
-                    { value: '2-4', label: '2–4 hours' },
-                    { value: '4-6', label: '4–6 hours' },
-                    { value: '6-plus', label: '6+ hours' }
-                ]
-            },
-            {
-                id: 'Q27',
-                type: 'single',
-                text: 'What is your current primary goal?',
-                options: [
-                    { value: 'improve-consistency', label: 'Improve consistency' },
-                    { value: 'improve-confidence', label: 'Improve confidence' },
-                    { value: 'increase-income', label: 'Increase income' },
-                    { value: 'learn-advanced', label: 'Learn advanced skills' }
+                    { value: 'few_hours', label: 'A few hours on weekends' },
+                    { value: 'daily_consistency', label: '1-2 hours of daily consistent practice' },
+                    { value: 'full_time', label: 'I am ready to go all-in full time' }
                 ]
             }
         ]
     }
-};
-
-// Likert scale labels
-const likertLabels = {
-    1: 'Strongly Disagree',
-    2: 'Disagree',
-    3: 'Neutral',
-    4: 'Agree',
-    5: 'Strongly Agree'
 };
 
 // Section order for navigation
-const sectionOrder = [
-    'section1',
-    'section2',
-    'section3',
-    'section4',
-    'section5',
-    'section6',
-    'section7',
-    'section8'
-];
+const sectionOrder = ['section1'];
 
-// Archetype definitions based on overall score bands
+// Archetype definitions based on Q1 selection
 const archetypes = {
-    needsStrengthening: {
-        name: 'Needs Strengthening',
+    beginner: {
+        id: 'beginner',
+        name: 'Beginner Baker',
         icon: '🌱',
-        range: [0, 39],
-        description: 'You are at the early stages of your baking journey — and that is perfectly fine. Every accomplished baker began exactly where you are. With the right guidance and consistent practice, your skills will grow rapidly. This assessment will help you identify precisely where to start for the fastest improvement.',
-        color: '#ef5350',
-        otoMessage: 'Your journey is just beginning, and the Dipti Academy is designed to take you from where you are to where you want to be. Start with the foundational courses and build confidence step by step.'
+        color: '#6366f1',
+        validation: 'It is so brave to start something new! Every master baker you admire once stood right where you are. Your passion is the perfect foundation, and with the right steps, you\'ll be baking professional-grade cakes sooner than you think.',
+        roadmap: {
+            start: 'Beginner Baking Modules',
+            focus: 'Mastering the Perfect Sponge & Basic Science',
+            why: 'Building a fail-proof foundation prevents frustration and wasted ingredients, giving you the confidence to grow.',
+            transition: 'Once you master the basics, you\'ll naturally unlock Advanced Decoration and Business Systems.'
+        }
     },
-    developing: {
-        name: 'Developing',
+    intermediate: {
+        id: 'intermediate',
+        name: 'Intermediate Baker',
         icon: '📈',
-        range: [40, 59],
-        description: 'You have built a solid foundation and are well on your way. Some areas are coming together nicely while others need more focused attention. This is the most exciting stage — where deliberate practice and targeted learning yield the biggest leaps forward.',
-        color: '#FFA726',
-        otoMessage: 'You have the foundation — now it is time to fill the gaps and accelerate your growth. The Dipti Academy courses recommended below are tailored to your specific needs.'
-    },
-    strong: {
-        name: 'Strong',
-        icon: '⭐',
-        range: [60, 79],
-        description: 'You demonstrate strong skills across most areas. Your baking is consistent, your products look professional, and you are developing a clear sense of direction. Now is the time to sharpen your specialisation and optimise your workflow and business approach.',
-        color: '#66BB6A',
-        otoMessage: 'Your skills are impressive. The next step is to refine your specialisation and turn your baking into a truly profitable venture with the advanced Dipti Academy courses.'
+        color: '#10b981',
+        validation: 'You\'ve moved past the basics and already have some wins under your belt! That\'s incredible. Now is the time to bridge the gap between "good" and "professional" by refining your techniques and consistency.',
+        roadmap: {
+            start: 'Intermediate + Skill Upgrade Modules',
+            focus: 'Precision Baking & Professional Finishing',
+            why: 'Refining your execution ensures every cake is a masterpiece, allowing you to charge what you\'re truly worth.',
+            transition: 'As your skills sharpen, we\'ll integrate the Business & Sales systems to turn your talent into profit.'
+        }
     },
     advanced: {
-        name: 'Advanced',
-        icon: '👨‍🍳',
-        range: [80, 100],
-        description: 'You are performing at an advanced level. Your technical skills, business acumen, and learning clarity are all well-developed. Continue refining your craft, mentoring others, and pushing into new specialisations to stay at the top of your game.',
-        color: '#42A5F5',
-        otoMessage: 'Congratulations on your exceptional mastery. The Dipti Academy advanced specialisation tracks will keep your skills sharp and open doors to new opportunities.'
+        id: 'advanced',
+        name: 'Advanced Baker',
+        icon: '🏆',
+        color: '#f59e0b',
+        validation: 'Your dedication to your craft is evident. You have the technical skills, and now you\'re ready to reach the pinnacle of baking artistry and professional branding. You\'re playing a big game now!',
+        roadmap: {
+            start: 'Advanced Baking + Decoration Mastery',
+            focus: 'High-End Artistry & Signature Style',
+            why: 'Mastering advanced decoration sets you apart in the market, making you the obvious choice for premium clients.',
+            transition: 'With your artistry solidified, the Business Growth modules will help you scale and automate your success.'
+        }
+    },
+    business: {
+        id: 'business',
+        name: 'Business-Focused Baker',
+        icon: '💰',
+        color: '#ec4899',
+        validation: 'You\'re a talented baker who understands that a successful business needs more than just great recipes. You have the heart of an entrepreneur, and you\'re ready to build a system that works for you.',
+        roadmap: {
+            start: 'Business & Sales Modules First',
+            focus: 'Pricing Strategy, Marketing & Sales Systems',
+            why: 'Focusing on the business side first ensures your hard work translates into real profit and a sustainable lifestyle.',
+            transition: 'While we scale your business, you\'ll have full access to refine any technical skills through our advanced modules.'
+        }
     }
 };
 
-// Dimension display names, icons, and course clusters
-const dimensionInfo = {
-    BFS: {
-        name: 'Baking Foundations',
-        icon: '🧁',
-        courses: ['Super Baker Foundation', 'Baking Premixes']
-    },
-    REX: {
-        name: 'Recipe Execution',
-        icon: '📋',
-        courses: ['Cake Baking & Icing', 'Recipes', 'Cookies', 'Breads']
-    },
-    FDS: {
-        name: 'Frosting & Decoration',
-        icon: '🎨',
-        courses: ['Frosting Mastery', 'Theme Cakes', 'Fondant']
-    },
-    ATS: {
-        name: 'Advanced Techniques',
-        icon: '🏆',
-        courses: ['Sugar Flowers', 'Chocolates', 'Ice Cream Cakes']
-    },
-    BPS: {
-        name: 'Business & Profitability',
-        icon: '💰',
-        courses: ['Home Bakery Profitability']
-    },
-    WSS: {
-        name: 'Workflow & Speed',
-        icon: '⚡',
-        courses: ['Business Setup', 'Bake‑a‑thon']
-    },
-    LCL: {
-        name: 'Learning Clarity',
-        icon: '🎯',
-        courses: ['Academy Orientation', 'Goal Setting']
-    }
+const diamondEcosystem = {
+    title: 'The Diamond Program Ecosystem',
+    description: 'The Diamond Program is more than just a course; it\'s a complete ecosystem designed to take you from hobbyist to high-earning professional baker.',
+    pillars: [
+        {
+            title: 'Baking Mastery',
+            desc: 'From beginner foundations to advanced, fail-proof recipes that keep customers coming back.',
+            icon: '🧁'
+        },
+        {
+            title: 'Advanced Decoration',
+            desc: 'Master the art of high-end decoration, theme cakes, and professional finishing that WOWs every time.',
+            icon: '🎨'
+        },
+        {
+            title: 'Business & Sales',
+            desc: 'The complete system for pricing, marketing, and scaling your home bakery into a profitable brand.',
+            icon: '📊'
+        }
+    ],
+    closing: 'Diamond contains everything you need to succeed, but your path inside it will be customized to YOUR current level and goals. You don\'t have to figure it out alone.',
+    ctaText: 'Start My Personalized Diamond Journey'
 };

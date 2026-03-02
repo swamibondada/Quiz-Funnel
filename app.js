@@ -216,7 +216,6 @@ function updateNavigation() {
     DOM.nextBtn.querySelector('span').textContent = isLastQuestion ? 'See My Results' : 'Next';
 }
 
-// Results Functions
 function calculateAndShowResults() {
     AppState.results = ScoringEngine.calculateResults(AppState.answers);
     showScreen('results');
@@ -225,76 +224,111 @@ function calculateAndShowResults() {
 
 function renderResults() {
     const { results } = AppState;
-    const ringColor = results.archetype.color;
+    const { archetype, dimensions, roadmap, diamondEcosystem } = results;
 
     const html = `
-        <div class="blueprint-header">
-            <div class="brand-badge" style="margin-bottom: var(--space-4);">PERSONALIZED ANALYSIS</div>
-            <h1 class="blueprint-title">Your Baking Skill Blueprint</h1>
-            <p class="welcome-description" style="margin: 0 auto; text-align: center;">
-                This analysis reveals your current proficiency across core baking skills and business foundations.
-            </p>
-        </div>
-        
-        <div class="dimension-card">
-            <div class="section-badge">Overall Readiness</div>
-            <div class="score-section" style="display: flex; align-items: center; justify-content: space-between; padding: var(--space-6);">
-                <div>
-                    <h2 class="energy-score-label">ALIGNMENT SCORE</h2>
-                    <div class="score-number" style="font-size: 4rem;">${results.finalScore}%</div>
-                    <p class="archetype-title" style="color: ${ringColor}; margin-top: var(--space-2);">${results.archetype.name.toUpperCase()}</p>
-                </div>
-                <div class="score-ring" style="width: 120px; height: 120px; --ring-percent: ${results.finalScore}">
-                    <svg viewBox="0 0 100 100">
-                        <circle class="ring-bg" cx="50" cy="50" r="45" style="fill:none; stroke:#e2e8f0; stroke-width:8;"/>
-                        <circle class="ring-fill" cx="50" cy="50" r="45" style="fill:none; stroke:${ringColor}; stroke-width:8; stroke-linecap:round; stroke-dasharray:283; stroke-dashoffset:calc(283 - (283 * ${results.finalScore} / 100));"/>
-                    </svg>
-                </div>
+        <div class="result-header fade-in">
+            <div class="brand-badge">YOUR PERSONALIZED ROADMAP</div>
+            <div class="archetype-banner" style="background: ${archetype.color}15; border: 1px solid ${archetype.color}30;">
+                <span class="archetype-icon">${archetype.icon}</span>
+                <h1 class="archetype-name" style="color: ${archetype.color};">${archetype.name}</h1>
             </div>
-            <p class="archetype-desc" style="padding: 0 var(--space-6);">${results.archetype.description}</p>
+            <p class="validation-text">${archetype.validation}</p>
         </div>
 
-        <div class="dimension-card">
-            <h3 class="card-title">Skill Dimension Breakdown</h3>
+        <div class="dimension-card fade-in" style="animation-delay: 0.2s;">
+            <h3 class="card-title">Your Current Skill Pillars</h3>
             <div class="dimension-bars-v">
-                ${Object.entries(results.dimensions).map(([key, score]) => `
+                ${Object.entries(dimensions).map(([name, score]) => `
                     <div class="dim-bar-item">
                         <div class="dim-bar-track">
-                            <div class="dim-bar-fill" style="height: ${score}%"></div>
+                            <div class="dim-bar-fill" style="height: ${score}%; background: ${archetype.color};"></div>
                         </div>
-                        <span class="dim-bar-label">${key}</span>
+                        <span class="dim-bar-label">${name.split(' ')[0]}</span>
                     </div>
                 `).join('')}
             </div>
         </div>
 
-        <div class="dimension-card">
-            <h3 class="card-title">Personalised Learning Roadmap</h3>
-            <div style="display: flex; flex-direction: column; gap: var(--space-4); margin-top: var(--space-6);">
-                ${results.roadmap.map((phase, i) => `
-                    <div style="padding: var(--space-4); background: #fafafa; border-radius: var(--radius-lg); border-left: 4px solid var(--accent-mint);">
-                        <div style="font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Phase ${i + 1}: ${phase.phase}</div>
-                        <div style="font-size: var(--text-sm); font-weight: 600; color: var(--accent-mint); margin-bottom: 8px;">Focus: ${phase.focusName}</div>
-                        <p style="font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.6;">${phase.description}</p>
+        <div class="dimension-card fade-in" style="animation-delay: 0.4s;">
+            <h3 class="card-title">Success Mountain Roadmap</h3>
+            <div class="mountain-container">
+                <svg viewBox="0 0 400 200" class="mountain-svg">
+                    <!-- Path Background -->
+                    <path d="M50,180 Q100,160 150,140 T250,100 T350,40" class="mountain-path-bg" />
+                    <!-- Animated Path -->
+                    <path d="M50,180 Q100,160 150,140 T250,100 T350,40" class="mountain-path-animated" style="stroke: ${archetype.color};" />
+                    
+                    <!-- Checkpoints -->
+                    <g class="checkpoint" transform="translate(50, 180)">
+                        <circle r="6" fill="${archetype.color}" />
+                        <text y="20" text-anchor="middle" class="checkpoint-label">Start</text>
+                    </g>
+                    <g class="checkpoint" transform="translate(150, 140)">
+                        <circle r="6" fill="#cbd5e1" class="checkpoint-dot" />
+                        <text y="-15" text-anchor="middle" class="checkpoint-label">Growth</text>
+                    </g>
+                    <g class="checkpoint" transform="translate(350, 40)">
+                        <circle r="6" fill="#cbd5e1" class="checkpoint-dot" />
+                        <text y="-15" text-anchor="middle" class="checkpoint-label">Mastery</text>
+                    </g>
+                </svg>
+            </div>
+            
+            <div class="roadmap-phases">
+                ${roadmap.map((phase, i) => `
+                    <div class="roadmap-phase-item ${i === 0 ? 'active' : ''}">
+                        <div class="phase-number" style="background: ${i === 0 ? archetype.color : '#e2e8f0'}; text-decoration: none;">${i + 1}</div>
+                        <div class="phase-content">
+                            <h4 class="phase-title">${phase.title}</h4>
+                            <div class="phase-focus">Focus: <strong>${phase.focus}</strong></div>
+                            <p class="phase-desc">${phase.description}</p>
+                            <a href="${phase.link}" class="session-link" style="color: ${archetype.color};">Go to Session →</a>
+                        </div>
                     </div>
                 `).join('')}
             </div>
         </div>
 
-        <div class="oto-section" style="border-color: ${ringColor}">
-            <h2 class="oto-title">Scale Your Baking Business</h2>
-            <p class="oto-subtitle">${results.archetype.otoMessage}</p>
-            <button class="btn-primary" onclick="window.open('https://diptibaking.com/pathway', '_blank')">
-                <span>Unlock Full Mastery Pathway</span>
-            </button>
+        <div class="ecosystem-section fade-in" style="animation-delay: 0.6s;">
+            <h2 class="ecosystem-title">${diamondEcosystem.title}</h2>
+            <p class="ecosystem-desc">${diamondEcosystem.description}</p>
+            
+            <div class="pillar-grid">
+                ${diamondEcosystem.pillars.map(pillar => `
+                    <div class="pillar-card">
+                        <span class="pillar-icon">${pillar.icon}</span>
+                        <h4 class="pillar-title">${pillar.title}</h4>
+                        <p class="pillar-desc">${pillar.desc}</p>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div class="ecosystem-closing">
+                <p>${diamondEcosystem.closing}</p>
+                <button class="btn-primary btn-large" onclick="window.open('https://diptibaking.com/diamond', '_blank')">
+                    <span>${diamondEcosystem.ctaText}</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
         </div>
 
-        <div style="text-align: center; margin-top: var(--space-8);">
-            <button class="btn-secondary" onclick="location.reload()">Retake Assessment</button>
+        <div style="text-align: center; margin-top: var(--space-8); padding-bottom: var(--space-8);">
+            <button class="btn-secondary" onclick="location.reload()">Retake Quiz</button>
         </div>
     `;
 
     DOM.resultsContainer.innerHTML = html;
+
+    // Animate the path drawing
+    setTimeout(() => {
+        const animatedPath = document.querySelector('.mountain-path-animated');
+        if (animatedPath) {
+            animatedPath.style.strokeDashoffset = '0';
+        }
+    }, 100);
 }
 
 // Initialize on DOM ready

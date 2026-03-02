@@ -550,255 +550,291 @@ body {
 }
 
 /* ========================================
-   Results Screen - Premium Styling
+   Results Screen - Diamond Program Redesign
    ======================================== */
 .results-container {
-    max-width: 800px;
+    max-width: 900px;
     width: 100%;
     margin: 0 auto;
-    padding: 64px var(--space-8);
+    padding: 64px var(--space-6);
     box-sizing: border-box;
 }
 
-.blueprint-header {
+.result-header {
     text-align: center;
-    margin-bottom: var(--space-12);
+    margin-bottom: var(--space-10);
 }
 
-.blueprint-title {
-    font-family: var(--font-display);
-    font-size: var(--text-4xl);
-    font-weight: 700;
-    margin-top: var(--space-4);
-}
-
-.dimension-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-2xl);
-    padding: var(--space-8);
-    margin-bottom: var(--space-8);
-    box-shadow: var(--shadow-soft);
-}
-
-.card-title {
-    font-family: var(--font-display);
-    font-size: var(--text-xl);
-    font-weight: 600;
-    margin-bottom: var(--space-4);
-    text-align: center;
-}
-
-.dimension-bars-v {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    height: 180px;
-    padding: var(--space-4) 0;
-}
-
-.dim-bar-item {
+.archetype-banner {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-2);
-    flex: 1;
+    gap: var(--space-4);
+    padding: var(--space-8) var(--space-6);
+    border-radius: var(--radius-2xl);
+    margin: var(--space-6) 0;
 }
 
-.dim-bar-track {
-    width: 32px;
-    height: 130px;
-    background: #f1f5f9;
-    border-radius: var(--radius-full);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+.archetype-icon {
+    font-size: 4rem;
+}
+
+.archetype-name {
+    font-family: var(--font-display);
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    margin: 0;
+}
+
+.validation-text {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    line-height: 1.8;
+    max-width: 700px;
+    margin: 0 auto;
+    font-style: italic;
+}
+
+/* Success Mountain Roadmap */
+.mountain-container {
+    position: relative;
+    padding: var(--space-4) 0;
+    margin-bottom: var(--space-8);
+    background: #f8fafc;
+    border-radius: var(--radius-xl);
     overflow: hidden;
 }
 
-.dim-bar-fill {
+.mountain-svg {
     width: 100%;
-    background: var(--gradient-primary);
-    transition: height 1s ease-out;
+    height: auto;
+    max-height: 300px;
 }
 
-.dim-bar-label {
-    font-size: 9px;
-    font-weight: 600;
-    color: var(--text-secondary);
+.mountain-path-bg {
+    fill: none;
+    stroke: #e2e8f0;
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+.mountain-path-animated {
+    fill: none;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.checkpoint-dot {
+    transition: r 0.3s ease, fill 0.3s ease;
+}
+
+.checkpoint-label {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    fill: var(--text-secondary);
     text-transform: uppercase;
-    text-align: center;
-    width: 100%;
+    letter-spacing: 0.05em;
 }
 
-/* OTO Section Refining */
-.oto-section {
+/* Roadmap Phases List */
+.roadmap-phases {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    /* Left align content by default */
-    padding: var(--space-10);
-    /* Balanced 40px padding */
-    background: var(--bg-card);
-    border: 2px solid var(--accent-mint);
-    border-radius: var(--radius-2xl);
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+}
+
+.roadmap-phase-item {
+    display: flex;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    transition: all var(--transition-base);
+    position: relative;
+}
+
+.roadmap-phase-item.active {
+    border-color: currentColor;
     box-shadow: var(--shadow-soft);
-    margin-top: var(--space-12);
 }
 
-.oto-title {
+.phase-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: 800;
+    flex-shrink: 0;
     font-family: var(--font-display);
-    font-size: var(--text-2xl);
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: var(--space-4);
-    text-align: left;
+    font-size: var(--text-lg);
 }
 
-.oto-subtitle {
-    font-size: var(--text-base);
+.phase-content {
+    flex: 1;
+}
+
+.phase-title {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    margin-bottom: var(--space-1);
+    color: var(--text-primary);
+}
+
+.phase-focus {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-3);
+}
+
+.phase-desc {
+    font-size: var(--text-sm);
     color: var(--text-secondary);
     line-height: 1.6;
-    margin-bottom: 20px;
-    /* Space between text and button */
-    text-align: left;
 }
 
-.oto-section .btn-primary {
-    align-self: center;
-    /* Center the button horizontally */
-    margin-top: 24px;
-    /* 24px space above button */
-    margin-bottom: 32px;
-    /* 32px space below button */
-    min-width: 280px;
+/* Ecosystem Section */
+.ecosystem-section {
+    margin-top: var(--space-12);
+    padding: var(--space-10) var(--space-6);
+    background: #ffffff;
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--border-subtle);
+    text-align: center;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-    .welcome-layout {
-        grid-template-columns: 1fr;
-        padding-top: 48px;
-        text-align: center;
-    }
+.ecosystem-title {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 800;
+    margin-bottom: var(--space-4);
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-    .welcome-left {
-        align-items: center;
-    }
+.ecosystem-desc {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    max-width: 650px;
+    margin: 0 auto var(--space-10);
+    line-height: 1.7;
+}
 
-    .welcome-title {
-        justify-content: center;
+.pillar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-6);
+    margin-bottom: var(--space-12);
+}
+
+.pillar-card {
+    padding: var(--space-8) var(--space-6);
+    background: #f8fafc;
+    border-radius: var(--radius-xl);
+    transition: transform 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.pillar-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-mint-dim);
+}
+
+.pillar-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: var(--space-4);
+}
+
+.pillar-title {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    margin-bottom: var(--space-3);
+    color: var(--text-primary);
+}
+
+.pillar-desc {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.ecosystem-closing {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: var(--space-10);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+}
+
+.ecosystem-closing p {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    max-width: 600px;
+}
+
+.btn-large {
+    padding: var(--space-5) var(--space-12);
+    font-size: var(--text-xl);
+}
+
+/* Animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
+/* Responsive Fixes */
 @media (max-width: 768px) {
-
-    /* Fix 1: First Page Mobile Layout (Logo Order) */
-    .welcome-layout {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 32px var(--space-4);
-        gap: var(--space-6);
-    }
-
-    .welcome-right {
-        order: -1;
-        /* Logo at top */
-        width: 100%;
-        margin-bottom: var(--space-4);
-        /* Spacing below logo */
-    }
-
-    .eq-logo-img {
-        max-width: 240px;
-        /* Scaled for mobile */
-    }
-
-    .welcome-left {
-        width: 100%;
-        gap: var(--space-6);
-    }
-
-    .welcome-title {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .welcome-title .subtitle,
-    .gradient-text {
+    .archetype-name {
         font-size: var(--text-3xl);
     }
 
-    .welcome-description {
-        max-width: 100%;
+    .pillar-grid {
+        grid-template-columns: 1fr;
     }
 
-    .quiz-info {
-        justify-content: center;
-    }
-
-    /* Fix 2: Personality Scale Labels on Mobile */
-    .personality-scale {
-        flex-wrap: wrap;
-        justify-content: center;
+    .roadmap-phase-item {
+        flex-direction: column;
         gap: var(--space-4);
-        padding: var(--space-4) 0;
-    }
-
-    .scale-circles {
-        order: -1;
-        /* Circles on top */
-        width: 100%;
-        justify-content: center;
-        margin-bottom: var(--space-2);
-    }
-
-    .scale-label {
-        min-width: unset;
-        font-size: 10px;
-        color: #94a3b8;
-    }
-
-    .scale-label-left,
-    .scale-label-right {
+        align-items: center;
         text-align: center;
     }
 
-    /* General Mobile Polish */
-    .quiz-container,
-    .results-container {
-        padding: 32px var(--space-4);
+    .phase-number {
+        margin: 0 auto;
     }
 
-    .question-card {
-        padding: var(--space-6) var(--space-4);
-    }
-
-    .question-text {
-        font-size: var(--text-xl);
-    }
-
-    .btn-primary {
+    .btn-large {
         width: 100%;
-        /* Full width for easy tapping */
-        padding: var(--space-4);
+        font-size: var(--text-lg);
     }
-}
 
-@media (max-width: 480px) {
+
     .scale-circles {
         gap: 8px;
-    }
-
-    .scale-circle.size-lg {
-        width: 44px;
-        height: 44px;
-    }
-
-    .scale-circle.size-md {
-        width: 38px;
-        height: 38px;
     }
 
     .scale-circle.size-sm {
